@@ -1,0 +1,557 @@
+{
+	"info": {
+		"_postman_id": "8f3b2c10-9d2a-4f51-b841-3a1b0c9d7e5f",
+		"name": "Distributed Military Asset Management System",
+		"description": "Complete Postman collection for testing all Day 1 microservices via API Gateway on port 8080.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login - Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"    console.log('Saved JWT Token to collection variable');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@military.com\",\n  \"password\": \"Admin@123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Login - Commander Alpha",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"commander.alpha@military.com\",\n  \"password\": \"Commander@123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "me"]
+						}
+					}
+				},
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "users"]
+						}
+					}
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Commander Charlie\",\n  \"email\": \"commander.charlie@military.com\",\n  \"password\": \"Commander@123\",\n  \"role\": \"BASE_COMMANDER\",\n  \"baseId\": 3\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "users"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Bases",
+			"item": [
+				{
+					"name": "Get All Bases",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/bases",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "bases"]
+						}
+					}
+				},
+				{
+					"name": "Get Base by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/bases/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "bases", "1"]
+						}
+					}
+				},
+				{
+					"name": "Create Base",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Delta Base\",\n  \"location\": \"Ladakh\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/bases",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "bases"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Equipment",
+			"item": [
+				{
+					"name": "Get All Equipment",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/equipment",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "equipment"]
+						}
+					}
+				},
+				{
+					"name": "Create Equipment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Drone Scout\",\n  \"type\": \"VEHICLE\",\n  \"unit\": \"Units\",\n  \"description\": \"Tactical reconnaissance drone\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/equipment",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "equipment"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Inventory",
+			"item": [
+				{
+					"name": "Get All Inventory",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/inventory",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "inventory"]
+						}
+					}
+				},
+				{
+					"name": "Get Inventory by Base ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/inventory/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "inventory", "1"]
+						}
+					}
+				},
+				{
+					"name": "Get Inventory Stock Item",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/inventory/1/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "inventory", "1", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Purchases",
+			"item": [
+				{
+					"name": "Create Purchase",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"baseId\": 1,\n  \"equipmentId\": 1,\n  \"quantity\": 50\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/purchases",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "purchases"]
+						}
+					}
+				},
+				{
+					"name": "Get All Purchases",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/purchases",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "purchases"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Transfers",
+			"item": [
+				{
+					"name": "Create Transfer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fromBaseId\": 1,\n  \"toBaseId\": 2,\n  \"equipmentId\": 1,\n  \"quantity\": 20\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/transfers",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "transfers"]
+						}
+					}
+				},
+				{
+					"name": "Get All Transfers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/transfers",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "transfers"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Assignments",
+			"item": [
+				{
+					"name": "Create Assignment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"baseId\": 1,\n  \"equipmentId\": 1,\n  \"personnelName\": \"Capt. Vikram Batra\",\n  \"quantity\": 10\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/assignments",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "assignments"]
+						}
+					}
+				},
+				{
+					"name": "Get All Assignments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/assignments",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "assignments"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Expenditures",
+			"item": [
+				{
+					"name": "Create Expenditure",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"baseId\": 1,\n  \"equipmentId\": 1,\n  \"quantity\": 5,\n  \"reason\": \"Firing range training drill\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/expenditures",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "expenditures"]
+						}
+					}
+				},
+				{
+					"name": "Get All Expenditures",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/expenditures",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "expenditures"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Audit Logs",
+			"item": [
+				{
+					"name": "Get All Audit Logs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/audit-logs",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "audit-logs"]
+						}
+					}
+				},
+				{
+					"name": "Filter Audit Logs by Event Type",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/audit-logs?eventType=PURCHASE_CREATED",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "audit-logs"],
+							"query": [
+								{
+									"key": "eventType",
+									"value": "PURCHASE_CREATED"
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}
