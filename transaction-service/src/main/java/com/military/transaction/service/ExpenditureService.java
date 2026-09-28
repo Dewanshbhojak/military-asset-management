@@ -28,8 +28,8 @@ public class ExpenditureService {
 
     @Transactional
     public Expenditure createExpenditure(CreateExpenditureRequest request, UserPrincipal principal) {
-        if (principal != null && "BASE_COMMANDER".equals(principal.getRole()) && principal.getBaseId() != null) {
-            if (!principal.getBaseId().equals(request.getBaseId())) {
+        if (principal != null && "BASE_COMMANDER".equals(principal.getRole())) {
+            if (principal.getBaseId() == null || !principal.getBaseId().equals(request.getBaseId())) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Base Commanders can only record expenditures for their assigned base.");
             }
         }
@@ -62,7 +62,8 @@ public class ExpenditureService {
     }
 
     public List<Expenditure> getAllExpenditures(UserPrincipal principal) {
-        if (principal != null && "BASE_COMMANDER".equals(principal.getRole()) && principal.getBaseId() != null) {
+        if (principal != null && "BASE_COMMANDER".equals(principal.getRole())) {
+            if (principal.getBaseId() == null) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Base Commander account has no assigned base.");
             return expenditureRepository.findByBaseId(principal.getBaseId());
         }
         return expenditureRepository.findAll();
@@ -72,7 +73,8 @@ public class ExpenditureService {
         Expenditure expenditure = expenditureRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Expenditure not found with ID: " + id));
 
-        if (principal != null && "BASE_COMMANDER".equals(principal.getRole()) && principal.getBaseId() != null) {
+        if (principal != null && "BASE_COMMANDER".equals(principal.getRole())) {
+            if (principal.getBaseId() == null) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Base Commander account has no assigned base.");
             if (!principal.getBaseId().equals(expenditure.getBaseId())) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied for this expenditure.");
             }

@@ -25,9 +25,8 @@ public class InventoryController {
     @GetMapping
     public ResponseEntity<List<Inventory>> getAllInventory(@AuthenticationPrincipal UserPrincipal principal) {
         if (principal != null && "BASE_COMMANDER".equals(principal.getRole())) {
-            if (principal.getBaseId() != null) {
-                return ResponseEntity.ok(inventoryService.getInventoryByBaseId(principal.getBaseId()));
-            }
+            if (principal.getBaseId() == null) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Base Commander account has no assigned base.");
+            return ResponseEntity.ok(inventoryService.getInventoryByBaseId(principal.getBaseId()));
         }
         return ResponseEntity.ok(inventoryService.getAllInventory());
     }
@@ -64,7 +63,7 @@ public class InventoryController {
 
     private void validateBaseScope(Long targetBaseId, UserPrincipal principal) {
         if (principal != null && "BASE_COMMANDER".equals(principal.getRole())) {
-            if (principal.getBaseId() != null && !principal.getBaseId().equals(targetBaseId)) {
+            if (principal.getBaseId() == null || !principal.getBaseId().equals(targetBaseId)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied: Base Commanders can only view inventory for their assigned base.");
             }
         }

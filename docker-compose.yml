@@ -45,7 +45,7 @@ services:
       - DB_URL=jdbc:mysql://mysql:3306/auth_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
       - DB_USERNAME=root
       - DB_PASSWORD=root
-      - JWT_SECRET=v9y$B&E)H@McQfTjWnZr4u7x!A%D*F-JaNdRgUkXp2s5v8y/B?E(H+MbQeThWmZq
+      - JWT_SECRET=v9y$$B&E)H@McQfTjWnZr4u7x!A%D*F-JaNdRgUkXp2s5v8y/B?E(H+MbQeThWmZq
     depends_on:
       mysql:
         condition: service_healthy
@@ -65,7 +65,7 @@ services:
       - RABBITMQ_PORT=5672
       - RABBITMQ_USERNAME=admin
       - RABBITMQ_PASSWORD=admin
-      - JWT_SECRET=v9y$B&E)H@McQfTjWnZr4u7x!A%D*F-JaNdRgUkXp2s5v8y/B?E(H+MbQeThWmZq
+      - JWT_SECRET=v9y$$B&E)H@McQfTjWnZr4u7x!A%D*F-JaNdRgUkXp2s5v8y/B?E(H+MbQeThWmZq
     depends_on:
       mysql:
         condition: service_healthy
@@ -88,7 +88,7 @@ services:
       - RABBITMQ_USERNAME=admin
       - RABBITMQ_PASSWORD=admin
       - ASSET_SERVICE_URL=http://asset-service:8082
-      - JWT_SECRET=v9y$B&E)H@McQfTjWnZr4u7x!A%D*F-JaNdRgUkXp2s5v8y/B?E(H+MbQeThWmZq
+      - JWT_SECRET=v9y$$B&E)H@McQfTjWnZr4u7x!A%D*F-JaNdRgUkXp2s5v8y/B?E(H+MbQeThWmZq
     depends_on:
       mysql:
         condition: service_healthy
@@ -110,7 +110,7 @@ services:
       - RABBITMQ_PORT=5672
       - RABBITMQ_USERNAME=admin
       - RABBITMQ_PASSWORD=admin
-      - JWT_SECRET=v9y$B&E)H@McQfTjWnZr4u7x!A%D*F-JaNdRgUkXp2s5v8y/B?E(H+MbQeThWmZq
+      - JWT_SECRET=v9y$$B&E)H@McQfTjWnZr4u7x!A%D*F-JaNdRgUkXp2s5v8y/B?E(H+MbQeThWmZq
     depends_on:
       mysql:
         condition: service_healthy
@@ -134,6 +134,18 @@ services:
       - asset-service
       - transaction-service
       - audit-service
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: military-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8080
+    depends_on:
+      - api-gateway
 
 volumes:
   mysql_data:

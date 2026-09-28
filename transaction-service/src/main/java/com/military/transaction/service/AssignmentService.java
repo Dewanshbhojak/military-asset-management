@@ -28,8 +28,8 @@ public class AssignmentService {
 
     @Transactional
     public Assignment createAssignment(CreateAssignmentRequest request, UserPrincipal principal) {
-        if (principal != null && "BASE_COMMANDER".equals(principal.getRole()) && principal.getBaseId() != null) {
-            if (!principal.getBaseId().equals(request.getBaseId())) {
+        if (principal != null && "BASE_COMMANDER".equals(principal.getRole())) {
+            if (principal.getBaseId() == null || !principal.getBaseId().equals(request.getBaseId())) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Base Commanders can only create assignments for their assigned base.");
             }
         }
@@ -62,7 +62,8 @@ public class AssignmentService {
     }
 
     public List<Assignment> getAllAssignments(UserPrincipal principal) {
-        if (principal != null && "BASE_COMMANDER".equals(principal.getRole()) && principal.getBaseId() != null) {
+        if (principal != null && "BASE_COMMANDER".equals(principal.getRole())) {
+            if (principal.getBaseId() == null) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Base Commander account has no assigned base.");
             return assignmentRepository.findByBaseId(principal.getBaseId());
         }
         return assignmentRepository.findAll();
@@ -72,7 +73,8 @@ public class AssignmentService {
         Assignment assignment = assignmentRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Assignment not found with ID: " + id));
 
-        if (principal != null && "BASE_COMMANDER".equals(principal.getRole()) && principal.getBaseId() != null) {
+        if (principal != null && "BASE_COMMANDER".equals(principal.getRole())) {
+            if (principal.getBaseId() == null) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Base Commander account has no assigned base.");
             if (!principal.getBaseId().equals(assignment.getBaseId())) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied for this assignment.");
             }
