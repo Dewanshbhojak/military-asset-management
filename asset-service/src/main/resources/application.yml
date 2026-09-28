@@ -4,11 +4,13 @@ server:
 spring:
   application:
     name: asset-service
+
   datasource:
     url: ${DB_URL:jdbc:mysql://localhost:3306/asset_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,20 +18,25 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+
   rabbitmq:
     host: ${RABBITMQ_HOST:localhost}
     port: ${RABBITMQ_PORT:5672}
     username: ${RABBITMQ_USERNAME:admin}
     password: ${RABBITMQ_PASSWORD:admin}
+    virtual-host: ${RABBITMQ_VHOST:/}
+    ssl:
+      enabled: ${RABBITMQ_SSL_ENABLED:false}
 
 jwt:
-  secret: ${JWT_SECRET:v9y$B&E)H@McQfTjWnZr4u7x!A%D*F-JaNdRgUkXp2s5v8y/B?E(H+MbQeThWmZq}
+  secret: ${JWT_SECRET}
 
 management:
   endpoints:
     web:
       exposure:
         include: health,info,metrics
+
   endpoint:
     health:
       show-details: always
